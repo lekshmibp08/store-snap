@@ -95,7 +95,7 @@ const RegisterPage: React.FC = () => {
     }
 
     setLoading(true)
-    const result = await sendOtp(formData.email, formData.phone, formData.password, formData.name)
+    const result = await sendOtp(formData.name, formData.email, formData.phone, formData.password)
     setLoading(false)
 
     if (result.success) {
@@ -111,7 +111,7 @@ const RegisterPage: React.FC = () => {
       setError("Please enter the OTP")
       return
     }
-    const result = await verifyAndRegister(emailForOtp, otp);
+    const result = await verifyAndRegister(formData.name, formData.email, formData.phone, formData.password, otp, );
     if (result.success) {
       setSuccess("Email verified! You can now login.");
       setOtpModal(false);
