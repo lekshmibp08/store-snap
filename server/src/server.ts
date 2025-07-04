@@ -24,8 +24,13 @@ app.use(cookieParser());
 app.use(morgan("dev"));
 
 app.get("/", (req, res) => {
-  res.send("API running...");
-});
+  res.status(200).json({
+    success: true,
+    message: "Server is running",
+    timestamp: new Date().toISOString(),
+  })
+})
+
 
 connectDB();
 app.listen(PORT, () => {
