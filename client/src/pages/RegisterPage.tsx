@@ -184,7 +184,13 @@ const RegisterPage: React.FC = () => {
           </p>
         </div>
       </div>
-      <Modal isOpen={otpModal} onClose={() => setOtpModal(false)} title="Verify OTP">
+      <Modal 
+        isOpen={otpModal} onClose={() => {
+          setOtpModal(false);
+          setOtp('');
+        }} 
+        title="Verify OTP"
+      >
           <div className="space-y-4">
             <p className="text-sm text-gray-600">Enter the OTP sent to <strong>{emailForOtp}</strong></p>
             <input
