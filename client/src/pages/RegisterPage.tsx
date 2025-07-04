@@ -192,7 +192,7 @@ const RegisterPage: React.FC = () => {
         title="Verify OTP"
       >
           <div className="space-y-4">
-            <p className="text-sm text-gray-600">Enter the OTP sent to <strong>{emailForOtp}</strong></p>
+            <p className="text-sm text-gray-600 p-2">Enter the OTP sent to <strong>{emailForOtp}</strong></p>
             <input
               type="text"
               placeholder="Enter OTP"
