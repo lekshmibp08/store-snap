@@ -26,12 +26,19 @@ interface IMongodb{
     URI: string | undefined
 }
 
+interface IMailer{
+    EMAIL_PASS : string;
+    EMAIL_USER: string;
+}
+
 interface IConfig {
     app: IApp
     mongodb: IMongodb 
     cors: ICors
     jwt : IJwtConfig
+    mailer: IMailer
 }
+
 
 export const config:IConfig = {
     app: {
@@ -54,6 +61,9 @@ export const config:IConfig = {
         ACCESS_TOKEN_EXPIRE : process.env.ACCESS_TOKEN_EXPIRE,
         REFRESH_TOKEN_EXPIRE : process.env.REFRESH_TOKEN_EXPIRE,
     },
-    
+    mailer:{
+        EMAIL_USER: process.env.EMAIL_USER!,
+        EMAIL_PASS: process.env.EMAIL_PASS!
+    }
 
 }

@@ -3,8 +3,11 @@ import cors from "cors"
 import morgan from "morgan"
 import cookieParser from "cookie-parser";
 
+import { errorHandler } from "./interfaces/middleware/errorMiddleware";
 import { config } from "./config/config";
 import connectDB from "./infrastructure/database/mongodb"
+
+import authRoutes from "./interfaces/routes/authRoutes"
 
 const app = express();
 const PORT = config.app.PORT || 5000
@@ -31,6 +34,9 @@ app.get("/", (req, res) => {
   })
 })
 
+app.use('/api', authRoutes);
+
+app.use(errorHandler);
 
 connectDB();
 app.listen(PORT, () => {
