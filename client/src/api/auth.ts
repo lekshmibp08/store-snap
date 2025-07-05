@@ -1,6 +1,5 @@
 import configAxios from '../services/axiosConfig';
 
-
 export const sendOtp = async (
   name: string,
   email: string,
@@ -51,3 +50,25 @@ export const loginUser = async (email: string, password: string) => {
     return { success: false, error: error.response?.data?.message || 'Login failed' };
   }
 };
+
+export const requestOtp = async (email: string) => {
+  try {
+    const response = await configAxios.post("/api/forgot-password", { email })
+    return { success: true, data: response.data }
+  } catch (error: any) {
+    return { success: false, error: error.response?.data?.message || "Failed to send OTP" }
+  }
+}
+
+export const resetPassword = async (email: string, otp: string, newPassword: string) => {
+  try {
+    const response = await configAxios.post("/api/reset-password", {
+      email,
+      otp,
+      newPassword,
+    })
+    return { success: true, data: response.data }
+  } catch (error: any) {
+    return { success: false, error: error.response?.data?.message || "Reset failed" }
+  }
+}
