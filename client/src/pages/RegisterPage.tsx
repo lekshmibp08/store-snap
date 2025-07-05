@@ -200,7 +200,7 @@ const RegisterPage: React.FC = () => {
               onChange={(e) => setOtp(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-md"
             />
-            <Button onClick={handleOtpSubmit} className="w-full">
+            <Button onClick={handleOtpSubmit} className="w-full mt-2.5">
               Submit OTP
             </Button>
           </div>
