@@ -1,6 +1,6 @@
 import type React from "react"
 import { useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import Input from "../components/ui/Input"
 import Button from "../components/ui/Button"
 import Modal from "../components/ui/Modal"
@@ -14,6 +14,7 @@ const ForgotPasswordPage: React.FC = () => {
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
   const [otpModal, setOtpModal] = useState(false)
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -23,7 +24,7 @@ const ForgotPasswordPage: React.FC = () => {
     setLoading(false)
 
     if (result.success) {
-      setSuccess("OTP sent to your email")
+      setSuccess(`OTP sent to ${email}`)
       setOtpModal(true)
     } else {
       setError(result.error)
@@ -31,6 +32,7 @@ const ForgotPasswordPage: React.FC = () => {
   }
 
   const handleReset = async () => {
+    setSuccess('');
     if (!otp || !newPassword) {
       setError("Please enter OTP and new password")
       return
@@ -41,9 +43,14 @@ const ForgotPasswordPage: React.FC = () => {
 
     if (result.success) {
       setSuccess("Password reset successful. You can now login.")
-      setOtpModal(false)
+      setTimeout(() => {
+        navigate('/login')
+      }, 2000)
+      
     } else {
       setError(result.error)
+      setOtp('');
+      setNewPassword('');
     }
   }
 
@@ -52,8 +59,7 @@ const ForgotPasswordPage: React.FC = () => {
       <div className="max-w-md w-full bg-white p-8 rounded-lg shadow-md">
         <h2 className="text-2xl font-bold text-center mb-6">Reset Password</h2>
 
-        {error && <div className="text-red-500 mb-4">{error}</div>}
-        {success && <div className="text-green-500 mb-4">{success}</div>}
+        {error && <p className="text-red-500 text-center mb-4">{error}</p>}
 
         <form onSubmit={handleSubmit}>
           <Input
@@ -77,8 +83,18 @@ const ForgotPasswordPage: React.FC = () => {
       </div>
 
       {/* OTP Modal */}
-      <Modal isOpen={otpModal} onClose={() => setOtpModal(false)} title="Reset Password">
+      <Modal isOpen={otpModal} onClose={() => {
+        setOtpModal(false);
+        setOtp('');
+        setNewPassword('');
+        setError('');
+        }} 
+        title="Reset Password"
+      >
         <div className="space-y-4">
+          {success && <p className="text-center text-green-600 mb-4">{success}</p>}
+          {error && <p className="text-center text-red-500 mb-4">{error}</p>}
+
           <Input label="OTP" value={otp} onChange={(e) => setOtp(e.target.value)} />
           <Input
             label="New Password"
