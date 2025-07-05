@@ -4,9 +4,11 @@ import { OtpRepository } from '../../infrastructure/database/repository/OtpRepos
 import { HttpStatusCode } from '../../enums/HttpStatusCode';
 import { sendOtpUseCase } from '../../application/useCases/sendOtpUseCase'; 
 import { verifyAndRegisterUser } from '../../application/useCases/verifyAndRegisterUser';
+import { UserUseCases } from '../../application/useCases/userUseCases';
 
 const userRepository = new UserRepository();
 const otpRepository = new OtpRepository();
+const userUseCases = new UserUseCases(userRepository);
 
 export const sendOtp = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -27,4 +29,34 @@ export const verifyOtpAndRegisterUser = async (req: Request, res: Response, next
     next(error);
   }
 };
+
+export const userLogin = async(req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      throw {
+        statusCode: HttpStatusCode.BAD_REQUEST, 
+        message:"Missing credentials"
+      };
+    }
+
+    const { token, refreshToken, userData } = await userUseCases.login(email, password);
+
+    res.cookie("refresh_token", refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    res.status(HttpStatusCode.OK).json({
+      token,
+      user: userData,
+    });
+
+  } catch (error) {
+    next(error);
+  }
+}
 
