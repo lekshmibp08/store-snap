@@ -18,4 +18,9 @@ export class UserRepository implements IUserRepository {
   async updateUser(userId: string, updateData: any) {
     return await User.findByIdAndUpdate(userId, updateData, { new: true }).select("-password");
   }
+
+  async updatePasswordByEmail(email: string, newHashedPassword: string): Promise<boolean> {
+    const result = await User.updateOne({ email }, { password: newHashedPassword });
+    return result.modifiedCount > 0;
+  }
 }

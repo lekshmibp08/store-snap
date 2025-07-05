@@ -6,4 +6,6 @@ export interface IUserRepository {
   createUser(user: IUser): Promise<IUser>;
   findById(id: string | Types.ObjectId): Promise<IUser | null>;
   updateUser(userId: string | Types.ObjectId, updateData: any): Promise<IUser | null >;
+  updatePasswordByEmail(email: string, newHashedPassword: string): Promise<boolean>;
+
 }

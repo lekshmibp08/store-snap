@@ -58,5 +58,25 @@ export const userLogin = async(req: Request, res: Response, next: NextFunction) 
   } catch (error) {
     next(error);
   }
+};
+
+export const forgotPassword = async (req: Request, res: Response) => {
+  const { email } = req.body
+  try {
+    await userUseCases.sendPasswordResetOtp(email)
+    res.status(200).json({ message: "OTP sent to email" })
+  } catch (error: any) {
+    res.status(400).json({ message: error.message })
+  }
 }
+
+export const resetPassword = async (req: Request, res: Response) => {
+  try {
+    const { email, otp, newPassword } = req.body;
+    await userUseCases.verifyOtpAndResetPassword(email, otp, newPassword);
+    res.status(200).json({ message: "Password reset successful" });
+  } catch (error: any) {
+    res.status(error.statusCode || 500).json({ message: error.message || "Reset failed" });
+  }
+};
 
