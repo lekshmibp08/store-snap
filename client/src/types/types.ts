@@ -17,6 +17,7 @@ export interface Image {
 
 export interface AuthState {
   user: User | null
+  token: null
   isAuthenticated: boolean
   loading: boolean
 }
