@@ -9,6 +9,7 @@ export interface Image {
   _id: string
   title: string
   url: string
+  size: number
   file: File | null
   userId: string
   order: number

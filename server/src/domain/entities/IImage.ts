@@ -4,6 +4,8 @@ export class IImage {
     constructor(
         public title: string,
         public url: string,
+        public size: number,
+        public publicId: string,
         public userId: string,
         public order: number,
         public _id?: Types.ObjectId | string,
@@ -14,6 +16,8 @@ export class IImage {
       return new IImage(
         doc.title,
         doc.url,
+        doc.size,
+        doc.publicId,
         doc.userId.toString(),
         doc.order,
         doc._id?.toString(),
