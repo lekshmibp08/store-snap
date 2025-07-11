@@ -20,7 +20,7 @@ const ImageCard: React.FC<ImageCardProps> = ({ image, onEdit, onDelete, isDraggi
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
 
   const handleEditSubmit = () => {
-    onEdit(image.id, editTitle, editFile || undefined)
+    onEdit(image._id, editTitle, editFile || undefined)
     setIsEditModalOpen(false)
     setEditFile(null)
     setPreviewUrl(null)
@@ -56,7 +56,7 @@ const ImageCard: React.FC<ImageCardProps> = ({ image, onEdit, onDelete, isDraggi
           <h3 className="font-semibold text-lg text-gray-900 mb-2 truncate" title={image.title}>
             {image.title}
           </h3>
-          <p className="text-sm text-gray-500 mb-4">Size: 2.0 MB</p>
+          <p className="text-sm text-gray-500 mb-4">{(image.size / (1024 * 1024)).toFixed(2)}MB</p>
 
           <div className="flex gap-2">
             <button
@@ -67,7 +67,7 @@ const ImageCard: React.FC<ImageCardProps> = ({ image, onEdit, onDelete, isDraggi
               Edit
             </button>
             <button
-              onClick={() => onDelete(image.id)}
+              onClick={() => onDelete(image._id)}
               className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg transition-colors text-sm font-medium"
             >
               <Trash2 size={14} />
