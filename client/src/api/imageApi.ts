@@ -23,7 +23,6 @@ export const uploadImages = async (
         Authorization: `Bearer ${userId || ""}`,
       },
     })
-
     return { success: true, data: response.data }
   } catch (error: any) {
     return {
@@ -33,13 +32,23 @@ export const uploadImages = async (
   }
 }
 
-export const getImages = async (token: string) => {
+export const getImages = async () => {
   try {
-    const response = await configAxios.get("/api/images", {
-      headers: { Authorization: `Bearer ${token}` },
-    })
+    const response = await configAxios.get("/api/images")
     return { success: true, data: response.data.images }
   } catch (error: any) {
     return { success: false, error: error.response?.data?.message }
   }
 }
+
+export const deleteImage = async (id: string): Promise<{ success: boolean; error?: string }> => {
+  try {
+    await configAxios.delete(`/api/images/${id}`);
+    return { success: true };
+  } catch (error: any) {
+    return {
+      success: false,
+      error: error.response?.data?.message || "Delete failed",
+    };
+  }
+};

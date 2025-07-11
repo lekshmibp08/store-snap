@@ -3,6 +3,7 @@ import { useState } from "react"
 import { Save, Target } from "lucide-react"
 import ImageCard from "./ImageCard"
 import type { Image } from "../../types/types"
+import { deleteImage } from "../../api/imageApi" 
 
 interface ImageGalleryProps {
   images: Image[]
@@ -33,7 +34,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ images, onImagesUpdate }) =
 
     if (!draggedItem) return
 
-    const dragIndex = images.findIndex((img) => img.id === draggedItem.id)
+    const dragIndex = images.findIndex((img) => img._id === draggedItem._id)
     if (dragIndex === dropIndex) return
 
     const newImages = [...images]
@@ -52,30 +53,25 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ images, onImagesUpdate }) =
   }
 
   const handleEdit = (id: string, title: string, file?: File) => {
-    const updatedImages = images.map((img) => {
-      if (img.id === id) {
-        return {
-          ...img,
-          title,
-          url: file ? URL.createObjectURL(file) : img.url,
-          file: file || img.file,
-        }
-      }
-      return img
-    })
-    onImagesUpdate(updatedImages)
+    
+    //onImagesUpdate(updatedImages)
   }
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     if (window.confirm("Are you sure you want to delete this image?")) {
-      const updatedImages = images.filter((img) => img.id !== id)
-      onImagesUpdate(updatedImages)
+      const result = await deleteImage(id);
+      if (result.success) {
+        const updated = images.filter(img => img._id !== id);
+        onImagesUpdate(updated);
+      } else {
+        alert(result.error || "Delete failed");
+      }
     }
   }
 
   const saveArrangement = () => {
     localStorage.setItem("images", JSON.stringify(images))
-    alert("Image arrangement saved successfully! 🎉")
+    alert("Image arrangement saved successfully!")
   }
 
   return (
@@ -106,7 +102,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ images, onImagesUpdate }) =
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {images.map((image, index) => (
               <div
-                key={image.id}
+                key={image._id}
                 draggable
                 onDragStart={(e) => handleDragStart(e, image)}
                 onDragOver={(e) => handleDragOver(e, index)}
@@ -120,7 +116,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ images, onImagesUpdate }) =
                   image={image}
                   onEdit={handleEdit}
                   onDelete={handleDelete}
-                  isDragging={draggedItem?.id === image.id}
+                  isDragging={draggedItem?._id === image._id}
                 />
               </div>
             ))}
