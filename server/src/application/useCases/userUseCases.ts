@@ -41,6 +41,37 @@ export class UserUseCases {
     };    
   };
 
+  async refreshAccessToken(refreshToken: string): Promise<string> {
+    try {
+      const decoded = jwt.verify(refreshToken, config.jwt.REFRESH_TOKEN_SECRET) as any;
+
+      const user = await this.userRepository.findByEmail(decoded.email);
+      if (!user) {
+        throw {
+          statusCode: HttpStatusCode.UNAUTHORIZED,
+          message: "User not found",
+        };
+      }
+
+      const newAccessToken = generateAccessToken({ id: user._id, email: user.email });
+
+      return newAccessToken;
+
+    } catch (err: any) {
+      if (err.name === "TokenExpiredError") {
+        throw {
+          statusCode: HttpStatusCode.UNAUTHORIZED,
+          message: "Refresh token expired",
+        };
+      }
+
+      throw {
+        statusCode: HttpStatusCode.UNAUTHORIZED,
+        message: "Invalid refresh token",
+      };
+    }
+  };
+
   async sendPasswordResetOtp(email: string): Promise<void> {
 
     const otpRepository = new OtpRepository();
@@ -92,40 +123,7 @@ export class UserUseCases {
     return;
   };
 
-  async refreshAccessToken(refreshToken: string): Promise<string> {
-    try {
-      const decoded = jwt.verify(refreshToken, config.jwt.REFRESH_TOKEN_SECRET) as any;
-
-      const user = await this.userRepository.findByEmail(decoded.email);
-      if (!user) {
-        throw {
-          statusCode: HttpStatusCode.UNAUTHORIZED,
-          message: "User not found",
-        };
-      }
-
-      const newAccessToken = jwt.sign(
-        { id: user._id, email: user.email },
-        config.jwt.ACCESS_TOKEN_SECRET,
-        { expiresIn: "15m" }
-      );
-
-      return newAccessToken;
-
-    } catch (err: any) {
-      if (err.name === "TokenExpiredError") {
-        throw {
-          statusCode: HttpStatusCode.UNAUTHORIZED,
-          message: "Refresh token expired",
-        };
-      }
-
-      throw {
-        statusCode: HttpStatusCode.UNAUTHORIZED,
-        message: "Invalid refresh token",
-      };
-    }
-  };
+  
 
 
 

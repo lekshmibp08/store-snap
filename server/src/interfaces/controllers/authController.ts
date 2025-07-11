@@ -60,23 +60,42 @@ export const userLogin = async(req: Request, res: Response, next: NextFunction) 
   }
 };
 
-export const forgotPassword = async (req: Request, res: Response) => {
+export const forgotPassword = async (req: Request, res: Response, next: NextFunction) => {
   const { email } = req.body
   try {
     await userUseCases.sendPasswordResetOtp(email)
-    res.status(200).json({ message: "OTP sent to email" })
+    res.status(HttpStatusCode.OK).json({ message: "OTP sent to email" })
   } catch (error: any) {
-    res.status(400).json({ message: error.message })
+    next(error)
   }
 }
 
-export const resetPassword = async (req: Request, res: Response) => {
+export const resetPassword = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { email, otp, newPassword } = req.body;
     await userUseCases.verifyOtpAndResetPassword(email, otp, newPassword);
-    res.status(200).json({ message: "Password reset successful" });
+    res.status(HttpStatusCode.OK).json({ message: "Password reset successful" });
   } catch (error: any) {
-    res.status(error.statusCode || 500).json({ message: error.message || "Reset failed" });
+    next(error)
   }
 };
 
+export const refreshAccessToken = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const refreshToken = req.cookies?.refresh_token;
+
+    if (!refreshToken) {
+      throw {
+        statusCode: HttpStatusCode.UNAUTHORIZED,
+        message: "No refresh token provided",
+      }
+    }
+
+    const newAccessToken = await userUseCases.refreshAccessToken(refreshToken);
+
+    res.status(HttpStatusCode.OK).json({ token: newAccessToken });
+
+  } catch (error: any) {
+    next(error)
+  }
+};
