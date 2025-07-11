@@ -8,6 +8,8 @@ import { config } from "./config/config";
 import connectDB from "./infrastructure/database/mongodb"
 
 import authRoutes from "./interfaces/routes/authRoutes"
+import imageRoutes from "./interfaces/routes/imageRoutes"
+
 
 const app = express();
 const PORT = config.app.PORT || 5000
@@ -35,6 +37,7 @@ app.get("/", (req, res) => {
 })
 
 app.use('/api', authRoutes);
+app.use('/api', imageRoutes);
 
 app.use(errorHandler);
 

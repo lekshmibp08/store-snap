@@ -1,4 +1,5 @@
 import bcrypt from 'bcrypt';
+import jwt  from 'jsonwebtoken';
 import { IUserRepository } from '../interfaces/IUserRepository';
 import { OtpRepository } from '../../infrastructure/database/repository/OtpRepository';
 import { IUser } from '../../domain/entities/IUser'
@@ -8,6 +9,7 @@ import {
     generateRefreshToken
 } from "../../utils/jwtUtils"
 import { sendEmail } from '../../infrastructure/services/emailService';
+import { config } from '../../config/config';
 
 export class UserUseCases {
   constructor(private userRepository: IUserRepository) {}
@@ -88,6 +90,41 @@ export class UserUseCases {
     await otpRepository.deleteOtpByEmail(email);
 
     return;
+  };
+
+  async refreshAccessToken(refreshToken: string): Promise<string> {
+    try {
+      const decoded = jwt.verify(refreshToken, config.jwt.REFRESH_TOKEN_SECRET) as any;
+
+      const user = await this.userRepository.findByEmail(decoded.email);
+      if (!user) {
+        throw {
+          statusCode: HttpStatusCode.UNAUTHORIZED,
+          message: "User not found",
+        };
+      }
+
+      const newAccessToken = jwt.sign(
+        { id: user._id, email: user.email },
+        config.jwt.ACCESS_TOKEN_SECRET,
+        { expiresIn: "15m" }
+      );
+
+      return newAccessToken;
+
+    } catch (err: any) {
+      if (err.name === "TokenExpiredError") {
+        throw {
+          statusCode: HttpStatusCode.UNAUTHORIZED,
+          message: "Refresh token expired",
+        };
+      }
+
+      throw {
+        statusCode: HttpStatusCode.UNAUTHORIZED,
+        message: "Invalid refresh token",
+      };
+    }
   };
 
 
