@@ -18,8 +18,6 @@ interface IJwtConfig {
     REFRESH_TOKEN_SECRET: string;
 }
 
-
-
 interface IMongodb{
     URI: string | undefined
 }
@@ -29,13 +27,21 @@ interface IMailer{
     EMAIL_USER: string;
 }
 
+interface ICloudinary {
+    CLOUD_NAME: string;
+    API_KEY: string
+    API_SECRET: string
+}
+
 interface IConfig {
     app: IApp
     mongodb: IMongodb 
     cors: ICors
     jwt : IJwtConfig
     mailer: IMailer
+    cloudinary: ICloudinary
 }
+
 
 
 export const config:IConfig = {
@@ -60,6 +66,12 @@ export const config:IConfig = {
     mailer:{
         EMAIL_USER: process.env.EMAIL_USER!,
         EMAIL_PASS: process.env.EMAIL_PASS!
+    },
+    cloudinary: {
+        CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME!,
+        API_KEY: process.env.CLOUDINARY_API_KEY!,
+        API_SECRET: process.env.CLOUDINARY_API_SECRET!
     }
+    
 
 }
