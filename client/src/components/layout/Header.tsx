@@ -1,16 +1,18 @@
 
 import type React from "react"
 import { Link } from "react-router-dom"
+import { LogOut } from 'lucide-react'
+import { useDispatch, useSelector } from "react-redux"
 import Button from "../ui/Button"
-//import useAuth from "../../hooks/useAuth"
+import type { RootState } from "../../store"
+import { logout as logoutAction  } from "../../store/authSlice"
+
 
 const Header: React.FC = () => {
-  //const { user, logout } = useAuth()
-  const user = {
-    name: 'Lekshmi'
-  }
+  const user = useSelector((state: RootState) => state.auth.user)
+  const dispatch = useDispatch();
   const logout = () => {
-    
+    dispatch(logoutAction())    
   }
 
   return (
@@ -23,10 +25,10 @@ const Header: React.FC = () => {
             </Link>
           </div>
 
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center gap-4">
             <span className="text-gray-700">Welcome, {user?.name}</span>
             <Button variant="secondary" size="sm" onClick={logout}>
-              Logout
+              <LogOut size={16} />
             </Button>
           </div>
         </div>
