@@ -6,17 +6,12 @@ import { logout, updateToken } from "../store/authSlice";
 const configAxios = axiosInstance.create({
   baseURL: config.API_BASE_URL,
   withCredentials: true,
-  timeout: 10000, 
-  headers: {
-    'Content-Type': 'application/json',
-  },
 });
 
 configAxios.interceptors.request.use(
   (config) => {
     
     const token = store.getState().auth.token;
-    console.log("Redux Token",token);
     
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
@@ -30,7 +25,7 @@ configAxios.interceptors.request.use(
 );
 
 configAxios.interceptors.response.use(
-  (Response) => Response,
+  (response) => response,
   async (error) => {
     const originalRequest = error.config;
 
@@ -52,13 +47,14 @@ configAxios.interceptors.response.use(
         store.dispatch(updateToken(newToken));
 
         originalRequest.headers.Authorization = `Bearer ${newToken}`;
-        return configAxios(originalRequest);
+        return await configAxios(originalRequest);
 
       } catch (refreshError) { 
         store.dispatch(logout());
         return Promise.reject(refreshError);        
       }
     }
+    return Promise.reject(error);
   }
 )
 
