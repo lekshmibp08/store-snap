@@ -1,12 +1,12 @@
 export interface User {
-  id: string
+  _id: string
   email: string
   phone: string
   name: string
 }
 
 export interface Image {
-  id: string
+  _id: string
   title: string
   url: string
   file: File | null
@@ -17,7 +17,7 @@ export interface Image {
 
 export interface AuthState {
   user: User | null
-  token: null
+  token: string | null
   isAuthenticated: boolean
   loading: boolean
 }
