@@ -13,22 +13,18 @@ import { getImages } from "../api/imageApi"
 
 const DashboardPage: React.FC = () => {
   const [images, setImages] = useState<Image[]>([])
-  const { user, token } = useSelector((state: RootState) => state.auth)
+  const { user } = useSelector((state: RootState) => state.auth)
 
 
   useEffect(() => {
     const fetchImages = async() => {
-      if(token) {
-        const result = await getImages(token);
-        if(result.success) {
-          console.log(result.data);
-          
-          setImages(result.data.sort((a: Image,b: Image) => a.order - b.order))
-        }
+      const result = await getImages();
+      if(result.success) {        
+        setImages(result.data.sort((a: Image,b: Image) => a.order - b.order))
       }
     }
     fetchImages();
-  }, [token])
+  }, [user])
 
   const handleImagesUploaded = (newImages: Image[]) => {
     setImages((prev) => [...prev, ...newImages].sort((a, b) => a.order - b.order))
@@ -37,17 +33,14 @@ const DashboardPage: React.FC = () => {
   const handleImagesUpdate = (updatedImages: Image[]) => {
     setImages(updatedImages)
 
-    // Update localStorage
     const allImages = JSON.parse(localStorage.getItem("images") || "[]")
     const otherUsersImages = allImages.filter((img: Image) => img.userId !== user?._id)
     const newAllImages = [...otherUsersImages, ...updatedImages]
     localStorage.setItem("images", JSON.stringify(newAllImages))
   }
 
-  // Calculate total size
   const totalSize = images.reduce((acc, img) => {
-    // Assuming each image is around 2MB on average
-    return acc + 2.0
+    return acc + img.size
   }, 0)
 
   return (
@@ -64,7 +57,7 @@ const DashboardPage: React.FC = () => {
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <StatsCard title="Total Images" value={images.length} icon={ImageIcon} bgColor="bg-blue-500" />
-          <StatsCard title="Storage Used" value={`${totalSize.toFixed(1)} MB`} icon={Cloud} bgColor="bg-green-500" />
+          <StatsCard title="Storage Used" value={`${(totalSize/(1024 * 1024)).toFixed(2)} MB`} icon={Cloud} bgColor="bg-green-500" />
           <StatsCard
             title="This Month"
             value={
