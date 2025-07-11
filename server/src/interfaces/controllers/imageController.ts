@@ -1,12 +1,12 @@
 
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { ImageUseCase } from "../../application/useCases/imageUseCase"; 
 import { ImageRepository } from "../../infrastructure/database/repository/ImageRepository"; 
 import { HttpStatusCode } from "../../enums/HttpStatusCode";
 
 const imageUseCase = new ImageUseCase(new ImageRepository());
 
-export const uploadImages = async (req: Request, res: Response) => {
+export const uploadImages = async (req: Request, res: Response, next: NextFunction) => {
   try {
     
     const userId = req.body.userId;
@@ -14,24 +14,38 @@ export const uploadImages = async (req: Request, res: Response) => {
     const files = req.files as Express.Multer.File[];
 
     const images = await imageUseCase.uploadAndSaveImages(files, titles, userId);
-    res.status(201).json({ success: true, images });
+    res.status(201).json({ images });
   } catch (error: any) {
     console.error("Upload Error:", error);
-    res.status(500).json({ success: false, message: error.message });
+    next(error)
   }
 };
 
-export const getUserImages = async (req: Request, res: Response) => {
-  const userId = req.user?.id
-  console.log(userId);
-  
-  if(!userId) {
-    throw { 
-      statusCode: HttpStatusCode.UNAUTHORIZED,
-      message: 'Access Denied: User not found'
+export const getUserImages = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const userId = req.user?.id
+    
+    if(!userId) {
+      throw { 
+        statusCode: HttpStatusCode.UNAUTHORIZED,
+        message: 'Access Denied: User not found'
+      }
     }
+  
+    const images = await imageUseCase.getImagesByUser(userId)
+    res.status(200).json({ images })
+    
+  } catch (error) {
+    next(error)
   }
+};
 
-  const images = await imageUseCase.getImagesByUser(userId)
-  res.json({ images })
-}
+export const deleteImage = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { id } = req.params;
+    await imageUseCase.deleteImage(id);
+    res.status(200).json({ success: true });
+  } catch (error) {
+    next(error);
+  }
+};

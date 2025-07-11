@@ -2,7 +2,8 @@ import express from "express";
 import { verifyToken } from "../middleware/authMiddleware";
 import { 
     uploadImages,
-    getUserImages
+    getUserImages,
+    deleteImage
 } from '../controllers/imageController'
 import upload from "../../utils/multer";
 
@@ -10,6 +11,7 @@ const router = express.Router();
 
 router.post("/upload", verifyToken, upload.array('images'), uploadImages);
 router.get("/images", verifyToken, getUserImages);
+router.delete("/images/:id", deleteImage);
 
 
 export default router;

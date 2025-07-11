@@ -14,5 +14,15 @@ export class ImageRepository implements IImageRepository {
     return documents.map(IImage.fromDocument);
   };
 
+  async getImageById(imageId: string): Promise<IImage> {
+    const imageDoc = await Image.findById(imageId);
+    return IImage.fromDocument(imageDoc);
+  }
+
+  async deleteImage(imageId: string): Promise<IImage | null> {
+    const deletedImage = await Image.findByIdAndDelete(imageId);
+    return IImage.fromDocument(deletedImage)
+  }
+
   
 }

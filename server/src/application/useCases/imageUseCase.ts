@@ -5,12 +5,15 @@ import { cloudinary } from "../../config/cloudinaryConfig";
 import { HttpStatusCode } from "../../enums/HttpStatusCode";
 
 export class ImageUseCase {
-    constructor(private imageRepository: IImageRepository) {};
-    async uploadAndSaveImages(files: Express.Multer.File[], titles: string[], userId: string) {
-      const images = [];
+  constructor(private imageRepository: IImageRepository) {};
+  
+  async uploadAndSaveImages(files: Express.Multer.File[], titles: string[], userId: string) {
+    
+    const images = [];
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
       const filePath = file.path;
+
       let buffer = fs.readFileSync(filePath);
      
       if (file.size > 2 * 1024 * 1024) {
@@ -35,22 +38,24 @@ export class ImageUseCase {
           }
         );
       
-          try {
-            uploadStream.end(buffer);
-          } catch (err) {
-            console.error("❌ Error ending upload stream:", err);
-            reject(err);
-          }
+        try {
+          uploadStream.end(buffer);
+        } catch (err) {
+          console.error("Error ending upload stream:", err);
+          reject(err);
+        }
       });
 
       console.log("Result: ", result);
       
 
-      const { secure_url, public_id }: any = result;
+      const { secure_url, public_id, bytes }: any = result;
 
       const saved = await this.imageRepository.saveImage({
         title: titles[i] || file.originalname,
         url: secure_url,
+        size: bytes,
+        publicId: public_id,
         userId,
         order: i,        
       });
@@ -70,5 +75,24 @@ export class ImageUseCase {
     
     return await this.imageRepository.getImagesByUser(userId);
   }
+
+  async deleteImage(imageId: string) {
+    const image = await this.imageRepository.getImageById(imageId);
+    if(!image) {
+      throw {
+        statusCode: HttpStatusCode.NOT_FOUND,
+        message: 'Image not found'
+      }
+    }
+    await cloudinary.uploader.destroy(image.publicId);
+    const deletedImage = await this.imageRepository.deleteImage(imageId);
+    if(!deletedImage) {
+      throw {
+        statusCode: HttpStatusCode.NOT_FOUND,
+        message: 'Image not found'
+      }
+    }
+
+  };
 
 }
