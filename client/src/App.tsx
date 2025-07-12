@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom"
 import { Provider } from "react-redux"
+import ToastProvider from "./components/ToastProvider"
 import store from "./store"
 import ProtectedRoute from "./components/ProtectedRoute"
 import PublicRoute from "./components/PublicRoute" 
@@ -12,6 +13,7 @@ const App = () => {
   return (
     <Provider store={store}>
       <Router>
+        <ToastProvider />
         <Routes>
           {/* Public Routes */}
           <Route element={<PublicRoute/>}>

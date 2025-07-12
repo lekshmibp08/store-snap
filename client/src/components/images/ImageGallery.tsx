@@ -1,6 +1,8 @@
 import type React from "react"
 import { useState } from "react"
 import { Save, Target } from "lucide-react"
+import Swal from 'sweetalert2';
+import { toast } from 'react-toastify';
 import ImageCard from "./ImageCard"
 import type { Image } from "../../types/types"
 import { deleteImage } from "../../api/imageApi" 
@@ -58,13 +60,22 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ images, onImagesUpdate }) =
   }
 
   const handleDelete = async (id: string) => {
-    if (window.confirm("Are you sure you want to delete this image?")) {
+    const result = await Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you want to delete this image?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel',
+    });
+    if (result.isConfirmed) {
       const result = await deleteImage(id);
       if (result.success) {
         const updated = images.filter(img => img._id !== id);
         onImagesUpdate(updated);
+        toast.success("Image deleted successfully!");
       } else {
-        alert(result.error || "Delete failed");
+        toast.error(result.error || "Delete failed. Please try again.");
       }
     }
   }
