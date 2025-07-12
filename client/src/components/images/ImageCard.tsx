@@ -19,11 +19,24 @@ const ImageCard: React.FC<ImageCardProps> = ({ image, onEdit, onDelete, isDraggi
   const [editFile, setEditFile] = useState<File | null>(null)
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
 
-  const handleEditSubmit = () => {
-    onEdit(image._id, editTitle, editFile || undefined)
-    setIsEditModalOpen(false)
+  const openEditModal = () => {
+    setEditTitle(image.title)       
+    setEditFile(null)              
+    setPreviewUrl(null)            
+    setIsEditModalOpen(true)
+  }
+
+  const closeEditModal = () => {
+    setEditTitle(image.title)
     setEditFile(null)
     setPreviewUrl(null)
+    setIsEditModalOpen(false)
+  }
+
+
+  const handleEditSubmit = () => {
+    onEdit(image._id, editTitle, editFile || undefined)
+    closeEditModal()
   }
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -60,7 +73,7 @@ const ImageCard: React.FC<ImageCardProps> = ({ image, onEdit, onDelete, isDraggi
 
           <div className="flex gap-2">
             <button
-              onClick={() => setIsEditModalOpen(true)}
+              onClick={openEditModal}
               className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded-lg transition-colors text-sm font-medium"
             >
               <Edit2 size={14} />
@@ -77,7 +90,7 @@ const ImageCard: React.FC<ImageCardProps> = ({ image, onEdit, onDelete, isDraggi
         </div>
       </div>
 
-      <Modal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)} title="Edit Image">
+      <Modal isOpen={isEditModalOpen} onClose={closeEditModal} title="Edit Image">
         <div className="space-y-4">
           <Input label="Title" value={editTitle} onChange={(e) => setEditTitle(e.target.value)} />
           <div>
@@ -97,7 +110,7 @@ const ImageCard: React.FC<ImageCardProps> = ({ image, onEdit, onDelete, isDraggi
           )}
           <div className="flex space-x-2 pt-4">
             <Button onClick={handleEditSubmit}>Save Changes</Button>
-            <Button variant="secondary" onClick={() => setIsEditModalOpen(false)}>
+            <Button variant="secondary" onClick={closeEditModal}>
               Cancel
             </Button>
           </div>
