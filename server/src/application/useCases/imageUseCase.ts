@@ -22,7 +22,6 @@ export class ImageUseCase {
       let buffer = fs.readFileSync(filePath);
      
       if (file.size > 2 * 1024 * 1024) {
-        console.log("WORKING");
         buffer = await sharp(filePath)
           .resize({ width: 1200 })
           .jpeg({ quality: 70 })
@@ -30,7 +29,6 @@ export class ImageUseCase {
       }
 
       const result = await new Promise<any>((resolve, reject) => {
-        console.log("START");
         const uploadStream = cloudinary.uploader.upload_stream(
           { folder: "my-images" },
           (error, result) => {
@@ -38,7 +36,6 @@ export class ImageUseCase {
               console.error("Cloudinary upload error:", error);
               return reject(error);
             }
-            console.log("Upload successful");
             resolve(result);
           }
         );
@@ -99,5 +96,67 @@ export class ImageUseCase {
     }
 
   };
+
+  async editImage(imageId: string, newTitle: string, newFile?: Express.Multer.File) {
+    
+    const image = await this.imageRepository.getImageById(imageId);
+    if (!image) {
+      throw {
+        statusCode: HttpStatusCode.NOT_FOUND,
+        message: "Image not found",
+      };
+    }
+
+    let updatedFields: Partial<{
+      title: string;
+      url: string;
+      size: number;
+      publicId: string;
+    }> = {
+      title: newTitle || image.title,
+    };
+
+    if (newFile) {
+      const filePath = newFile.path;
+      let buffer = fs.readFileSync(filePath);
+
+      if (newFile.size > 2 * 1024 * 1024) {
+        buffer = await sharp(filePath)
+          .resize({ width: 1200 })
+          .jpeg({ quality: 70 })
+          .toBuffer();
+      }
+
+      await cloudinary.uploader.destroy(image.publicId);
+
+      const result = await new Promise<any>((resolve, reject) => {
+        const uploadStream = cloudinary.uploader.upload_stream(
+          { folder: "my-images" },
+          (error, result) => {
+            if (error) return reject(error);
+            resolve(result);
+          }
+        );
+        try {
+          uploadStream.end(buffer);
+        } catch (err) {
+          return reject(err);
+        }
+      });
+
+      const { secure_url, public_id, bytes }: any = result;
+      updatedFields = {
+        ...updatedFields,
+        url: secure_url,
+        size: bytes,
+        publicId: public_id,
+      };
+
+      fs.unlinkSync(filePath);
+    }
+
+    const updatedImage = await this.imageRepository.updateImage(imageId, updatedFields);
+    return updatedImage;
+  }
 
 }

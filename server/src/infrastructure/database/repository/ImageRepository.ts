@@ -24,5 +24,9 @@ export class ImageRepository implements IImageRepository {
     return IImage.fromDocument(deletedImage)
   }
 
+  async updateImage(imageId: string, updates: Partial<IImage>): Promise<IImage | null> {
+    return await Image.findByIdAndUpdate(imageId, updates, { new: true });
+  }
+
   
 }

@@ -49,3 +49,16 @@ export const deleteImage = async (req: Request, res: Response, next: NextFunctio
     next(error);
   }
 };
+
+export const editImage = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { id } = req.params;
+    const { title } = req.body;
+    const file = req.file;
+
+    const updated = await imageUseCase.editImage(id, title, file);
+    res.status(200).json({ success: true, image: updated });
+  } catch (error: any) {
+    next(error);
+  }
+};

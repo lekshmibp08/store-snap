@@ -5,4 +5,5 @@ export interface IImageRepository {
   getImagesByUser(userId: string): Promise<IImage[]>;
   getImageById(imageId: string): Promise<IImage>;
   deleteImage(imageId: string): Promise<IImage | null>;
+  updateImage(imageId: string, updates: Partial<IImage>): Promise<IImage | null>;
 }
