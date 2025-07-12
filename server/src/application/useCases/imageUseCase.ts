@@ -8,6 +8,11 @@ export class ImageUseCase {
   constructor(private imageRepository: IImageRepository) {};
   
   async uploadAndSaveImages(files: Express.Multer.File[], titles: string[], userId: string) {
+
+    const existingImages = await this.imageRepository.getImagesByUser(userId);
+    let currentMaxOrder = existingImages.length > 0
+      ? Math.max(...existingImages.map(img=>img.order ?? 0))
+      : -1
     
     const images = [];
     for (let i = 0; i < files.length; i++) {
@@ -57,7 +62,7 @@ export class ImageUseCase {
         size: bytes,
         publicId: public_id,
         userId,
-        order: i,        
+        order: ++currentMaxOrder,        
       });
 
       console.log(saved);
