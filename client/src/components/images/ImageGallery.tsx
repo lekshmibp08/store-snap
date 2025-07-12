@@ -60,6 +60,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ images, onImagesUpdate }) =
     const result = await editImage(id, title, file);
     if(result.success && result.image) {
       const updated = images.map(img => (img._id === id ? result.image! : img));
+      toast.success("Image updated successfully!");
       onImagesUpdate(updated);
     } else {
       toast.error(result.error || "File Updation failed. Please try again.");
