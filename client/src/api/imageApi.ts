@@ -1,4 +1,5 @@
 import configAxios from "../services/axiosConfig"; 
+import type { Image } from "../types/types";
 
 export const uploadImages = async (
   files: File[],
@@ -49,6 +50,29 @@ export const deleteImage = async (id: string): Promise<{ success: boolean; error
     return {
       success: false,
       error: error.response?.data?.message || "Delete failed",
+    };
+  }
+};
+
+export const editImage = async (
+  id: string,
+  title: string,
+  file?: File
+): Promise<{ success: boolean; image?: Image; error?: string }> => {
+  try {
+    const formData = new FormData();
+    formData.append("title", title);
+    if (file) formData.append("image", file);
+
+    const res = await configAxios.put(`/api/images/${id}`, formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+
+    return { success: true, image: res.data.image };
+  } catch (error: any) {
+    return {
+      success: false,
+      error: error.response?.data?.message || "Updation failed. Please try again.",
     };
   }
 };

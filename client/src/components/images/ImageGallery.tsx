@@ -5,7 +5,7 @@ import Swal from 'sweetalert2';
 import { toast } from 'react-toastify';
 import ImageCard from "./ImageCard"
 import type { Image } from "../../types/types"
-import { deleteImage } from "../../api/imageApi" 
+import { deleteImage, editImage } from "../../api/imageApi" 
 
 interface ImageGalleryProps {
   images: Image[]
@@ -54,9 +54,16 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ images, onImagesUpdate }) =
     setDragOverIndex(null)
   }
 
-  const handleEdit = (id: string, title: string, file?: File) => {
-    
-    //onImagesUpdate(updatedImages)
+  const handleEdit = async (
+    id: string, title: string, file?: File
+  ) => {
+    const result = await editImage(id, title, file);
+    if(result.success && result.image) {
+      const updated = images.map(img => (img._id === id ? result.image! : img));
+      onImagesUpdate(updated);
+    } else {
+      toast.error(result.error || "File Updation failed. Please try again.");
+    }    
   }
 
   const handleDelete = async (id: string) => {
