@@ -4,6 +4,11 @@ import sharp from 'sharp';
 import { cloudinary } from "../../config/cloudinaryConfig"; 
 import { HttpStatusCode } from "../../enums/HttpStatusCode";
 
+interface ImageOrderUpdate {
+  id: string;
+  order: number;
+}
+
 export class ImageUseCase {
   constructor(private imageRepository: IImageRepository) {};
   
@@ -158,5 +163,19 @@ export class ImageUseCase {
     const updatedImage = await this.imageRepository.updateImage(imageId, updatedFields);
     return updatedImage;
   }
+
+  async updateImageOrder(images: ImageOrderUpdate[], userId: string) {
+    for (const image of images) {
+      const existing = await this.imageRepository.getImageById(image.id);
+      if (!existing || existing.userId.toString() !== userId) {
+        throw {
+          statusCode: 403,
+          message: "Unauthorized to update image order",
+        };
+      }
+
+      await this.imageRepository.updateImageOrder(image.id, image.order);
+    }
+  }  
 
 }

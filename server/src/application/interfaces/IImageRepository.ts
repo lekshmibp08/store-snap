@@ -6,4 +6,6 @@ export interface IImageRepository {
   getImageById(imageId: string): Promise<IImage>;
   deleteImage(imageId: string): Promise<IImage | null>;
   updateImage(imageId: string, updates: Partial<IImage>): Promise<IImage | null>;
+  updateImageOrder(imageId: string, order: number): Promise<void>;
+  
 }

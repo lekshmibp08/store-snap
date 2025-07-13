@@ -28,5 +28,8 @@ export class ImageRepository implements IImageRepository {
     return await Image.findByIdAndUpdate(imageId, updates, { new: true });
   }
 
+  async updateImageOrder(imageId: string, order: number): Promise<void> {
+    await Image.findByIdAndUpdate(imageId, { order });
+  }  
   
 }

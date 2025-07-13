@@ -62,3 +62,23 @@ export const editImage = async (req: Request, res: Response, next: NextFunction)
     next(error);
   }
 };
+
+export const updateImageOrder = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { images } = req.body; 
+    const userId = req.user?.id;
+
+    if(!userId) {
+      throw { 
+        statusCode: HttpStatusCode.UNAUTHORIZED,
+        message: 'Access Denied: User not found'
+      }
+    }    
+
+    await imageUseCase.updateImageOrder(images, userId);
+
+    res.status(200).json({ success: true, message: "Order updated successfully" });
+  } catch (error: any) {
+    next(error);
+  }
+};
