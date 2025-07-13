@@ -76,3 +76,17 @@ export const editImage = async (
     };
   }
 };
+
+export const updateImageOrder = async (
+  reorderedImages: { id: string; order: number }[]
+): Promise<{ success: boolean; error?: string }> => {
+  try {
+    await configAxios.put("/api/images/reorder", { images: reorderedImages });
+    return { success: true };
+  } catch (error: any) {
+    return {
+      success: false,
+      error: error.response?.data?.message || "Failed to save image order",
+    };
+  }
+};

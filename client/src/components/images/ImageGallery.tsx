@@ -5,7 +5,8 @@ import Swal from 'sweetalert2';
 import { toast } from 'react-toastify';
 import ImageCard from "./ImageCard"
 import type { Image } from "../../types/types"
-import { deleteImage, editImage } from "../../api/imageApi" 
+import { deleteImage, editImage, updateImageOrder } from "../../api/imageApi" 
+import Button from "../ui/Button";
 
 interface ImageGalleryProps {
   images: Image[]
@@ -88,10 +89,20 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ images, onImagesUpdate }) =
     }
   }
 
-  const saveArrangement = () => {
-    localStorage.setItem("images", JSON.stringify(images))
-    alert("Image arrangement saved successfully!")
-  }
+  const saveArrangement = async () => {
+    const reorderd = images.map((img, index) => ({
+      id: img._id,
+      order: index,
+    }))
+
+    const result = await updateImageOrder(reorderd);
+
+    if(result.success) {
+      toast.success("Image order saved successfully!");
+    } else {
+      toast.error(result.error || "Failed to save order.");
+    }
+  };
 
   return (
     <div>
@@ -100,13 +111,10 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ images, onImagesUpdate }) =
           <h2 className="text-3xl font-bold text-gray-900 flex items-center gap-2">🖼️ Your Image Gallery</h2>
           <p className="text-gray-600 mt-1">{images.length} images in your album</p>
         </div>
-        <button
-          onClick={saveArrangement}
-          className="flex items-center gap-2 px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition-colors"
-        >
-          <Save size={16} />
+        <Button onClick={saveArrangement} variant="green" size="lg" className="flex flex-row gap-2">
+          <Save size={25} />
           Save Arrangement
-        </button>
+        </Button>
       </div>
 
       {images.length === 0 ? (
