@@ -71,22 +71,28 @@ const ImageCard: React.FC<ImageCardProps> = ({ image, onEdit, onDelete, isDraggi
           </h3>
           <p className="text-sm text-gray-500 mb-4">{(image.size / (1024 * 1024)).toFixed(2)}MB</p>
 
-          <div className="flex gap-2">
-            <button
-              onClick={openEditModal}
-              className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded-lg transition-colors text-sm font-medium"
-            >
-              <Edit2 size={14} />
-              Edit
-            </button>
-            <button
-              onClick={() => onDelete(image._id)}
-              className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg transition-colors text-sm font-medium"
-            >
-              <Trash2 size={14} />
-              Delete
-            </button>
-          </div>
+<div className="flex gap-2">
+  <Button
+    onClick={openEditModal}
+    variant="secondary"
+    size="sm"
+    className="flex-1 flex items-center justify-center gap-2"
+  >
+    <Edit2 size={14} />
+    Edit
+  </Button>
+
+  <Button
+    onClick={() => onDelete(image._id)}
+    variant="delete"
+    size="sm"
+    className="flex-1 flex items-center justify-center gap-2"
+  >
+    <Trash2 size={14} />
+    Delete
+  </Button>
+</div>          
+
         </div>
       </div>
 
