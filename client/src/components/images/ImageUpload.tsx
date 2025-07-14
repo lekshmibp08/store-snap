@@ -100,8 +100,14 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onImagesUploaded }) => {
   }
 
   return (
-    <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-      <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+    <div className="p-6 rounded-xl shadow-sm border border-gray-200"
+      style={{
+        backgroundColor: "var(--card-color)",
+        color: "var(--text-color)",
+        borderColor: "rgba(100, 116, 139, 0.2)",
+      }}    
+    >
+      <h3 className="text-xl font-semibold text-[var(--text-color)] mb-4 flex items-center gap-2">
         <Upload size={20} />
         Upload New Images
       </h3>

@@ -44,13 +44,13 @@ const DashboardPage: React.FC = () => {
   }, 0)
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[var(--bg-color)] text-[var(--text-color)]">
       <Header />
 
-      <main className="max-w-7xl mx-auto px-6 py-8">
+      <main className="max-w-7xl mx-auto px-6 pt-24 pb-8">
         {/* Welcome Section */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">Welcome to your Image Album! 🎨</h1>
+          <h1 className="text-4xl font-bold bg-[var(--bg-color)] text-[var(--text-color)] mb-2">Welcome to your Image Album! 🎨</h1>
           <p className="text-gray-600 text-lg">Manage, organize, and showcase your beautiful images with ease.</p>
         </div>
 

@@ -50,9 +50,14 @@ const ImageCard: React.FC<ImageCardProps> = ({ image, onEdit, onDelete, isDraggi
   return (
     <>
       <div
-        className={`bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all duration-200 group ${
+        className={`rounded-xl shadow-sm border overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all duration-200 group ${
           isDragging ? "scale-105 shadow-xl rotate-2" : ""
         }`}
+        style={{
+          backgroundColor: "var(--card-color)",
+          color: "var(--text-color)",
+          borderColor: "rgba(100, 116, 139, 0.2)",
+        }}        
       >
         <div className="relative">
           <img src={image.url || "/placeholder.svg"} alt={image.title} className="w-full h-48 object-cover" />
@@ -66,7 +71,7 @@ const ImageCard: React.FC<ImageCardProps> = ({ image, onEdit, onDelete, isDraggi
         </div>
 
         <div className="p-4">
-          <h3 className="font-semibold text-lg text-gray-900 mb-2 truncate" title={image.title}>
+          <h3 className="font-semibold text-lg text-[var(--text-color)] mb-2 truncate" title={image.title}>
             {image.title}
           </h3>
           <p className="text-sm text-gray-500 mb-4">{(image.size / (1024 * 1024)).toFixed(2)}MB</p>
@@ -100,17 +105,17 @@ const ImageCard: React.FC<ImageCardProps> = ({ image, onEdit, onDelete, isDraggi
         <div className="space-y-4">
           <Input label="Title" value={editTitle} onChange={(e) => setEditTitle(e.target.value)} />
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Replace Image (optional)</label>
+            <label className="block text-sm font-medium text-[var(--text-color)] mb-1">Replace Image (optional)</label>
             <input
               type="file"
               accept="image/*"
               onChange={handleFileChange}
-              className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+              className="block w-full text-sm text-[var(--text-color)] file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
             />
           </div>
           {previewUrl && (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">New Image Preview</label>
+              <label className="block text-sm font-medium text-[var(--text-color)] mb-1">New Image Preview</label>
               <img src={previewUrl || "/placeholder.svg"} alt="Preview" className="w-full h-32 object-cover rounded" />
             </div>
           )}

@@ -21,8 +21,8 @@ const Button: React.FC<ButtonProps> = ({
     primary: "bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500",
     secondary: "bg-gray-200 text-gray-900 hover:bg-gray-300 focus:ring-gray-500",
     danger: "bg-red-600 text-white hover:bg-red-700 focus:ring-red-500",
-    green: "bg-green-600 text-white hover:bg-green-700 focus:ring-green-500",
-    delete: "bg-red-50 text-red-600 hover:bg-red-100", 
+    green: "bg-green-600 text-white hover:bg-green-700 focus:ring-green-500 dark:bg-blue-500 dark:hover:bg-blue-400 dark:focus:ring-blue-300",
+    delete: "bg-red-50 text-red-600 hover:bg-red-100",
   }
 
   const sizeClasses = {

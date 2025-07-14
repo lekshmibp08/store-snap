@@ -108,8 +108,8 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ images, onImagesUpdate }) =
     <div>
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
         <div>
-          <h2 className="text-3xl font-bold text-gray-900 flex items-center gap-2">🖼️ Your Image Gallery</h2>
-          <p className="text-gray-600 mt-1">{images.length} images in your album</p>
+          <h2 className="text-3xl font-bold text-[var(--text-color)] flex items-center gap-2">🖼️ Your Image Gallery</h2>
+          <p className="text-[var(--text-color)] mt-1">{images.length} images in your album</p>
         </div>
         <Button onClick={saveArrangement} variant="green" size="lg" className="flex flex-row gap-2">
           <Save size={25} />
