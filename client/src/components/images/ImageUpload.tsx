@@ -122,7 +122,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onImagesUploaded }) => {
       >
         <Upload size={48} className="mx-auto text-gray-400 mb-4" />
         <p className="text-lg font-medium text-gray-700 mb-2">Drop images here or click to browse</p>
-        <p className="text-sm text-gray-500">Maximum {maxImages} images • PNG, JPG, GIF up to 10MB each</p>
+        <p className="text-sm text-gray-500">Maximum {maxImages} images • PNG, JPG, JPEG up to 5MB each</p>
 
         <input
           ref={fileInputRef}

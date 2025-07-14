@@ -119,7 +119,7 @@ const ImageCard: React.FC<ImageCardProps> = ({ image, onEdit, onDelete, isDraggi
               <img src={previewUrl || "/placeholder.svg"} alt="Preview" className="w-full h-32 object-cover rounded" />
             </div>
           )}
-          <div className="flex space-x-2 pt-4">
+          <div className="flex space-x-2 pt-4 justify-between">
             <Button onClick={handleEditSubmit}>Save Changes</Button>
             <Button variant="secondary" onClick={closeEditModal}>
               Cancel
