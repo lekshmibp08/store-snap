@@ -23,7 +23,7 @@ const ThemeToggle = () => {
   return (
     <button
       onClick={toggleTheme}
-      className="p-2 rounded-full border transition-all"
+      className="p-2 rounded-full border transition-all cursor-pointer"
       style={{
         backgroundColor: "var(--card-color)",
         color: "var(--text-color)",

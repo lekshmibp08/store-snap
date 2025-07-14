@@ -23,7 +23,7 @@ const Header: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           {/* Logo */}
-          <Link to="/dashboard" className="flex items-center gap-2 text-lg font-bold">
+          <Link to="/dashboard" className="flex items-center text-lg font-bold">
             <img src="/snap-store.png" alt="Snap Store Logo" className="h-10 w-auto" />
             <span className="text-base text-[var(--header-text)] hidden sm:inline">Snap Store</span>
           </Link>
@@ -42,7 +42,7 @@ const Header: React.FC = () => {
             className="md:hidden focus:outline-none"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
-            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            {isMobileMenuOpen ? <span /> : <Menu size={24} />}
           </button>
         </div>
 
@@ -51,7 +51,7 @@ const Header: React.FC = () => {
           <div className="md:hidden mt-2 p-4 bg-[var(--card-color)] rounded-xl shadow-lg border border-gray-300 dark:border-gray-700 mx-2">
             {/* Logo Section */}
             <div className="flex items-center justify-between mb-4">
-              <Link to="/dashboard" className="flex items-center gap-2">
+              <Link to="/dashboard" className="flex items-center">
                 <img src="/snap-store.png" alt="Snap Store Logo" className="h-8 w-auto" />
                 <span className="text-lg font-semibold text-[var(--header-text)]">Snap Store</span>
               </Link>
