@@ -18,7 +18,7 @@ export class ImageUseCase {
     let currentMaxOrder = existingImages.length > 0
       ? Math.max(...existingImages.map(img=>img.order ?? 0))
       : -1
-    
+     
     const images = [];
     for (let i = 0; i < files.length; i++) {
       const file = files[i];

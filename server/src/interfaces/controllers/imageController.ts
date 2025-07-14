@@ -10,7 +10,8 @@ export const uploadImages = async (req: Request, res: Response, next: NextFuncti
   try {
     
     const userId = req.body.userId;
-    const titles = req.body.titles || "[]";
+    const titles = Array.isArray(req.body.titles)
+      ? req.body.titles : [req.body.titles]
     const files = req.files as Express.Multer.File[];
 
     const images = await imageUseCase.uploadAndSaveImages(files, titles, userId);
